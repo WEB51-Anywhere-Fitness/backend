@@ -1,6 +1,6 @@
 const express = require("express");
 
-const clientRouter = require("./auth/auth-router.js");
+const clientRouter = require("./auth/client-router.js");
 const instructorRouter = require("./users/instructor-router.js");
 
 const server = express();

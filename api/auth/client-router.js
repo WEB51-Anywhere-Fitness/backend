@@ -7,7 +7,7 @@ const {
 const { JWT_SECRET } = require("../secrets");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const User = require("../users/model.js");
+const User = require("../users/users-model.js");
 
 function generateToken(user) {
   const payload = {
