@@ -1,0 +1,26 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Backend for anywhere fitness build week project",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WEB51-Anywhere-Fitness/backend.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WEB51-Anywhere-Fitness/backend/issues"
+  },
+  "homepage": "https://github.com/WEB51-Anywhere-Fitness/backend#readme",
+  "dependencies": {
+    "@vscode/sqlite3": "^5.0.8",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.3",
+    "jsonwebtoken": "^8.5.1",
+    "knex": "^1.0.4"
+  }
+}
