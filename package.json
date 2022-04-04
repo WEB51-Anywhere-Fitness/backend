@@ -4,7 +4,10 @@
   "description": "Backend for anywhere fitness build week project",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "migrate": "knex migrate:latest",
+    "rollback": "knex migrate:rollback",
+    "seed": "knex seed:run"
   },
   "repository": {
     "type": "git",
