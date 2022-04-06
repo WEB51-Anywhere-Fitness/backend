@@ -1,12 +1,17 @@
 const db = require("../../data/db-config");
 
 const findAll = () => {
-  return db("classes as c").join("roles as r", "c.role_id", "=", "r.role_id");
+  return db("classes as c").join(
+    "users as u",
+    "c.instructor_id",
+    "=",
+    "u.user_id"
+  );
 };
 
 function findBy(filter) {
   return db("classes as c")
-    .join("roles as r", "c.role_id", "=", "r.role_id")
+    .join("users as u", "c.instructor_id", "=", "u.user_id")
     .select(
       "c.class_id",
       "c.name",
@@ -17,7 +22,7 @@ function findBy(filter) {
       "c.location",
       "c.registered_attendees",
       "c.max_class_size",
-      "r.role_name as role"
+      "u.user_id as user"
     )
     .where(filter);
 }
@@ -28,7 +33,7 @@ function deleteById(class_id) {
 
 function findById(class_id) {
   return db("classes as c")
-    .join("roles as r", "c.role_id", "=", "r.role_id")
+    .join("users as u", "c.instructor_id", "=", "u.user_id")
     .select(
       "c.class_id",
       "c.name",
