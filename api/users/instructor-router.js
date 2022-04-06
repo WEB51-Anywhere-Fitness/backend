@@ -24,8 +24,6 @@ function generateToken(user) {
 
 router.post(
   "/register",
-  restricted,
-  only("instructor"),
   checkUsernameFree,
   (req, res, next) => {
     let user = req.body;
