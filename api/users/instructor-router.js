@@ -1,6 +1,8 @@
 const router = require("express").Router();
 const Users = require("../users/users-model.js");
 const { JWT_SECRET } = require("../secrets");
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const {
   restricted,
   only,
@@ -22,8 +24,6 @@ function generateToken(user) {
 
 router.post(
   "/register",
-  restricted,
-  only("instructor"),
   checkUsernameFree,
   (req, res, next) => {
     let user = req.body;
@@ -45,13 +45,11 @@ router.post(
 
 router.post(
   "/login",
-  // restricted,
   checkUsernameExists,
-  only("instructor"),
   (req, res, next) => {
     let { username, password } = req.body;
 
-    User.findBy({ username })
+    Users.findBy({ username })
       .then(([user]) => {
         if (user && bcrypt.compareSync(password, user.password)) {
           const token = generateToken(user);
