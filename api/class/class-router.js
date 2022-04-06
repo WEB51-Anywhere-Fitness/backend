@@ -11,7 +11,7 @@ router.get("/", restricted, (req, res, next)=>{
         res.status(200).json(classes);
     })
     .catch(next);
-})
+});
 
 router.get("/:class_id", restricted, (req,res,next)=>{
     const {class_id} = req.params;
@@ -19,8 +19,8 @@ router.get("/:class_id", restricted, (req,res,next)=>{
     .then(classes =>{
         res.json(classes)
     })
-    .catch(next)
-})
+    .catch(next);
+});
 
 router.post("/", restricted, only('instructor'), (req, res, next)=>{
     const body = req.body;
@@ -32,24 +32,39 @@ router.post("/", restricted, only('instructor'), (req, res, next)=>{
     .then(classes =>{
         res.status(201).json(classes)
     })
-    .catch(next)
-})
+    .catch(next);
+});
 
-router.delete('/:class_id', restricted, only('instructor'), (req, res, next)=>{
-    const {class_id} = req.params;
-    Class.deleteById(class_id)
-    .then(classes =>{
-        if(classes == null){
-            res.status(404).json({message: "Does not exist"});
-        } else {
-            res.status(200).json({message: "Class deleted"});
-        }
+router.delete("/:class_id", (req, res, next) => {
+  const { class_id } = req.params;
+  Class.deleteById(class_id)
+    .then((classes) => {
+      if (classes == null) {
+        res.status(404).json({ message: "Does not exist" });
+      } else {
+        res.status(200).json(classes);
+      }
     })
-  .catch(next)
-})
+    .catch(next);
+});
 
+router.put("/:class_id", async (req, res, next) => {
+  try {
+    const updated = await Class.update(req.params.class_id, req.body);
+    res.json(updated);
+  } catch (err) {
+    next(err);
+  }
+});
 
+router.use((err, req, res, next) => {
+  //eslint-disable-line
 
+  res.status(500).json({
+    message: err.message,
+    stack: err.stack,
+  });
+});
 
 router.use((err, req, res, next)=>{ //eslint-disable-line
     

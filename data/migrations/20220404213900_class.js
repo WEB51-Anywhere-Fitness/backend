@@ -18,27 +18,39 @@ exports.up = function (knex) {
         .inTable("users")
         .onUpdate("CASCADE")
         .onDelete("CASCADE");
-    })
-    .createTable('class_clients', (tbl) => {
-      tbl.increments('class_client_id');
-      tbl.integer('class_id')
+      tbl
+        .integer("role_id")
         .unsigned()
         .notNullable()
-        .references('class_id')
-        .inTable('classes')
-        .onDelete('CASCADE')
-        .onUpdate('CASCADE');
-      tbl.integer('user_id')
-      .unsigned()
-      .notNullable()
-      .references('user_id')
-      .inTable('users')
-      .onDelete('CASCADE')
-      .onUpdate('CASCADE');
+        .references("role_id")
+        .inTable("roles")
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
     })
+
+    .createTable("class_clients", (tbl) => {
+      tbl.increments("class_client_id");
+      tbl
+        .integer("class_id")
+        .unsigned()
+        .notNullable()
+        .references("class_id")
+        .inTable("classes")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+      tbl
+        .integer("user_id")
+        .unsigned()
+        .notNullable()
+        .references("user_id")
+        .inTable("users")
+        .onDelete("CASCADE")
+        .onUpdate("CASCADE");
+    });
 };
 
 exports.down = function (knex) {
-  return knex.schema.
-  dropTableIfExists("class_clients").dropTableIfExists("classes");
+  return knex.schema
+    .dropTableIfExists("class_clients")
+    .dropTableIfExists("classes");
 };

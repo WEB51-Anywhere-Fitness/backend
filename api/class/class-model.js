@@ -38,8 +38,11 @@ function findBy(filter) {
     )
     .where(filter);
 }
-function deleteById(class_id) {
-  return db("classes").del().where({class_id});
+
+async function deleteById(class_id) {
+  const result = await findById(class_id);
+  await db("classes").where("class_id", class_id).del();
+  return result;
 }
 
 function findById(class_id) {
@@ -91,10 +94,16 @@ async function add({
   return createdClass;
 }
 
+async function update(class_id, changes) {
+  await db("classes").update(changes).where("class_id", class_id);
+  return findById(class_id);
+}
+
 module.exports = {
   add,
   findBy,
   findById,
   findAll,
   deleteById,
+  update,
 };
