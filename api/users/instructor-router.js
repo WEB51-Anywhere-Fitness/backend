@@ -45,7 +45,7 @@ router.post(
 
 router.post(
   "/login",
-  restricted,
+  // restricted,
   checkUsernameExists,
   only("instructor"),
   (req, res, next) => {
