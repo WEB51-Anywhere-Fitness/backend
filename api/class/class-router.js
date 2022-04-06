@@ -1,8 +1,11 @@
 const router = require("express").Router();
 const Class = require("./class-model");
+const {
+    restricted,
+    only
+} = require('../auth/auth-middleware');
 
-
-router.get("/", (req, res, next)=>{
+router.get("/", restricted, (req, res, next)=>{
     Class.findAll()
     .then(classes => {
         res.status(200).json(classes);
@@ -10,7 +13,7 @@ router.get("/", (req, res, next)=>{
     .catch(next);
 })
 
-router.get("/:class_id", (req,res,next)=>{
+router.get("/:class_id", restricted, (req,res,next)=>{
     const {class_id} = req.params;
     Class.findById(class_id)
     .then(classes =>{
@@ -19,9 +22,9 @@ router.get("/:class_id", (req,res,next)=>{
     .catch(next)
 })
 
-router.post("/", (req, res, next)=>{
+router.post("/", restricted, only('instructor'), (req, res, next)=>{
     const body = req.body;
-    if(!body.name || !body.type || body.start_time || !body.duration ||body.intensity_level || !body.location || body.registered_attendees|| body.max_class_size ){
+    if( !body.name || !body.type || !body.start_time || !body.duration || !body.intensity_level || !body.location || !body.registered_attendees|| !body.max_class_size ){
         res.status(400).json({message: "Please provide required credentials"})
         return;
     }
@@ -32,14 +35,14 @@ router.post("/", (req, res, next)=>{
     .catch(next)
 })
 
-router.delete('/:class_id', (req, res, next)=>{
-    const {class_id} = re.params;
+router.delete('/:class_id', restricted, only('instructor'), (req, res, next)=>{
+    const {class_id} = req.params;
     Class.deleteById(class_id)
     .then(classes =>{
         if(classes == null){
             res.status(404).json({message: "Does not exist"});
         } else {
-            res.status(200).json(classes)
+            res.status(200).json({message: "Class deleted"});
         }
     })
   .catch(next)
@@ -48,7 +51,7 @@ router.delete('/:class_id', (req, res, next)=>{
 
 
 
-router.use((err,req , res, next)=>{ //eslint-disable-line
+router.use((err, req, res, next)=>{ //eslint-disable-line
     
     res.status(500).json({
         message: err.message,

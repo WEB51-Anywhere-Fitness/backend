@@ -19,6 +19,7 @@ const restricted = (req, res, next) => {
 };
 
 const only = (role_name) => (req, res, next) => {
+  console.log(req.decodedJwt);
   if (req.decodedJwt && req.decodedJwt.role_name === role_name) {
     next();
   } else {
@@ -51,19 +52,19 @@ async function checkUsernameFree(req, res, next) {
 
 const validateRoleName = (req, res, next) => {
   let user = req.body;
-
+  console.log(user.role_name);
   if (!user.role_name || user.role_name.trim() == "") {
     user.role_name = "client";
-  }
-  if (user.role_name.trim() === "instructor") {
-    res.status(422).json({ message: "Role name can not be instructor" });
+  } else if (user.role_name !== "instructor" && user.role_name !== "client") {
+    res.status(422).json({
+      message: "Invalid role name"
+    });
   } else if (user.role_name.trim().length > 32) {
     res.status(422).json({
       message: "Role name can not be longer than 32 characters",
     });
   } else {
-    req.role_name = user.role_name.trim();
-    next();
+    next()
   }
 };
 

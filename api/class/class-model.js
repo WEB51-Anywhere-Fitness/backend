@@ -6,6 +6,18 @@ const findAll = () => {
     "c.instructor_id",
     "=",
     "u.user_id"
+  ).select(
+    "c.class_id",
+      "c.name",
+      "c.type",
+      "c.start_time",
+      "c.duration",
+      "c.intensity_level",
+      "c.location",
+      "c.registered_attendees",
+      "c.max_class_size",
+      "u.user_id as instructor_id",
+      "u.username as instructor"
   );
 };
 
@@ -27,8 +39,7 @@ function findBy(filter) {
     .where(filter);
 }
 function deleteById(class_id) {
-  db("classes").where("class_id", class_id).del();
-  return findById(class_id);
+  return db("classes").del().where({class_id});
 }
 
 function findById(class_id) {
@@ -58,18 +69,10 @@ async function add({
   location,
   registered_attendees,
   max_class_size,
-  role_name,
+  instructor_id
 }) {
   let created_class_id;
   await db.transaction(async (trx) => {
-    let role_id_to_use;
-    const [role] = await trx("roles").where("role_name", role_name);
-    if (role) {
-      role_id_to_use = role.role_id;
-    } else {
-      const [role_id] = await trx("roles").insert({ role_name: role_name });
-      role_id_to_use = role_id;
-    }
     const [class_id] = await trx("classes").insert({
       name,
       type,
@@ -79,7 +82,7 @@ async function add({
       location,
       registered_attendees,
       max_class_size,
-      role_id: role_id_to_use,
+      instructor_id
     });
     created_class_id = class_id;
   });
