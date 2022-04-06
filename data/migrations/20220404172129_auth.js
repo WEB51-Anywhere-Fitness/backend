@@ -18,8 +18,8 @@ exports.up = function (knex) {
         .notNullable()
         .references("role_id")
         .inTable("roles")
-        .onUpdate("RESTRICT")
-        .onDelete("RESTRICT");
+        .onUpdate("CASCADE")
+        .onDelete("CASCADE");
     });
 };
 
