@@ -26,9 +26,11 @@ function findBy(filter) {
     )
     .where(filter);
 }
-function deleteById(class_id) {
-  db("classes").where("class_id", class_id).del();
-  return findById(class_id);
+
+async function deleteById(class_id) {
+  const result = await findById(class_id);
+  await db("classes").where("class_id", class_id).del();
+  return result;
 }
 
 function findById(class_id) {
@@ -59,6 +61,7 @@ async function add({
   registered_attendees,
   max_class_size,
   role_name,
+  instructor_id,
 }) {
   let created_class_id;
   await db.transaction(async (trx) => {
@@ -79,6 +82,7 @@ async function add({
       location,
       registered_attendees,
       max_class_size,
+      instructor_id,
       role_id: role_id_to_use,
     });
     created_class_id = class_id;
@@ -88,10 +92,16 @@ async function add({
   return createdClass;
 }
 
+async function update(class_id, changes) {
+  await db("classes").update(changes).where("class_id", class_id);
+  return findById(class_id);
+}
+
 module.exports = {
   add,
   findBy,
   findById,
   findAll,
   deleteById,
+  update,
 };
