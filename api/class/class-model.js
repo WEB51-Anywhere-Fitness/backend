@@ -1,7 +1,7 @@
 const db = require("../../data/db-config");
 
 const findAll = () => {
-  return db("classes").join("classes as c", "c.role_id", "=", "r.role_id");
+  return db("classes as c").join("roles as r", "c.role_id", "=", "r.role_id");
 };
 
 function findBy(filter) {
