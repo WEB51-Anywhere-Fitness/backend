@@ -7,17 +7,39 @@ const findAll = () => {
 function findBy(filter) {
   return db("classes as c")
     .join("roles as r", "c.role_id", "=", "r.role_id")
-    .select("c.class_id", "c.name", "c.type", "r.role_name as role")
+    .select(
+      "c.class_id",
+      "c.name",
+      "c.type",
+      "c.start_time",
+      "c.duration",
+      "c.intensity_level",
+      "c.location",
+      "c.registered_attendees",
+      "c.max_class_size",
+      "r.role_name as role"
+    )
     .where(filter);
 }
 function deleteById(class_id) {
   db("classes").where("class_id", class_id).del();
   return findById(class_id);
 }
+
 function findById(class_id) {
   return db("classes as c")
     .join("roles as r", "c.role_id", "=", "r.role_id")
-    .select("c.class_id", "c.name", "c.type")
+    .select(
+      "c.class_id",
+      "c.name",
+      "c.type",
+      "c.start_time",
+      "c.duration",
+      "c.intensity_level",
+      "c.location",
+      "c.registered_attendees",
+      "c.max_class_size"
+    )
     .where("c.class_id", class_id)
     .first();
 }
