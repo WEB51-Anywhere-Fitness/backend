@@ -1,7 +1,13 @@
+// jwt import from npm
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../secrets"); // use this secret!
+
+// secret import for JWT decoding
+const { JWT_SECRET } = require("../secrets");
+
+// User model import
 const User = require("../users/users-model");
 
+// Middleware that requires user making request to pass a valid JWT in header
 const restricted = (req, res, next) => {
   const token = req.headers.authorization;
   if (token) {
@@ -18,8 +24,8 @@ const restricted = (req, res, next) => {
   }
 };
 
+// Higher order middleware function that restricts access to a specific role, must be called after restricted because it requires an already decoded JWT
 const only = (role_name) => (req, res, next) => {
-  console.log(req.decodedJwt);
   if (req.decodedJwt && req.decodedJwt.role_name === role_name) {
     next();
   } else {
@@ -27,6 +33,7 @@ const only = (role_name) => (req, res, next) => {
   }
 };
 
+// Middleware function to validate that username actually exists
 const checkUsernameExists = async (req, res, next) => {
   try {
     let user = await User.findBy({ username: req.body.username });
@@ -41,6 +48,7 @@ const checkUsernameExists = async (req, res, next) => {
   }
 };
 
+// Middleware function to validate that username doesn't exist in database
 async function checkUsernameFree(req, res, next) {
   let [user] = await User.findBy({ username: req.body.username });
   if (user != null) {
@@ -50,9 +58,9 @@ async function checkUsernameFree(req, res, next) {
   }
 }
 
+// Simple parsing to make sure the role name is correct, don't want whacky entries in the database
 const validateRoleName = (req, res, next) => {
   let user = req.body;
-  console.log(user.role_name);
   if (!user.role_name || user.role_name.trim() == "") {
     user.role_name = "client";
   } else if (user.role_name !== "instructor" && user.role_name !== "client") {
@@ -68,6 +76,7 @@ const validateRoleName = (req, res, next) => {
   }
 };
 
+// Middleware exports
 module.exports = {
   restricted,
   checkUsernameFree,

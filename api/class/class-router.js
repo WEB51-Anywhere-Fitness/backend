@@ -50,12 +50,9 @@ router.post("/:class_id/rsvp", restricted, only('client'), (req, res, next) => {
     const {class_id} = req.params;
     const token = req.headers.authorization;
     const decodedJWT = jwt.verify(token, JWT_SECRET)
-    console.log(decodedJWT);
     Class.getAttendeesById(class_id)
     .then(attendees => {
-      attendees.forEach(user => console.log(user))
       const exists = attendees.find(user => user.username === decodedJWT.username)
-      console.log(exists);
       if(exists) {
         res.status(409).json({message: 'You have already signed up for this class!'});
       } else {
@@ -85,7 +82,7 @@ router.post("/", restricted, only('instructor'), (req, res, next)=>{
 });
 
 // delete endpoint to remove class, restricted to instructor
-router.delete("/:class_id", restricted, only(instructor), (req, res, next) => {
+router.delete("/:class_id", restricted, only('instructor'), (req, res, next) => {
   const { class_id } = req.params;
   Class.deleteById(class_id)
     .then((classes) => {
@@ -99,7 +96,7 @@ router.delete("/:class_id", restricted, only(instructor), (req, res, next) => {
 });
 
 // update endpoint for an instructor to update a class
-router.put("/:class_id", restricted, only(instructor), async (req, res, next) => {
+router.put("/:class_id", restricted, only('instructor'), async (req, res, next) => {
   try {
     const updated = await Class.update(req.params.class_id, req.body);
     res.json(updated);
