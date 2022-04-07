@@ -222,21 +222,8 @@ describe("[POST] /api/auth/register", () => {
     expect(res.body.message).toMatch(/invalid role name/i);
     expect(res.status).toBe(422);
   });
-  test("[16] Has proper status and message if a client tries to register as a instructor", async () => {
-    let res = await request(server)
-      .post("/api/auth/register")
-      .send({ username: "doopy", password: "1234", role_name: "instructor" });
-    expect(res.body.message).toMatch(/authorized personnel only/i);
-    expect(res.status).toBe(422);
-    res = await request(server).post("/api/auth/register").send({
-      username: "doopy",
-      password: "1234",
-      role_name: "    instructor     ",
-    });
-    expect(res.body.message).toMatch(/authorized personnel only/i);
-    expect(res.status).toBe(422);
-  });
-  test("[17] Has proper status on success", async () => {
+
+  test("[16] Has proper status on success", async () => {
     const res = await request(server)
       .post("/api/auth/register")
       .send({ username: "doopy", password: "1234" });
@@ -244,17 +231,17 @@ describe("[POST] /api/auth/register", () => {
   });
 });
 describe("[GET] /api/class", () => {
-  test("[18] requests without a token are bounced with proper status and message", async () => {
+  test("[17] requests without a token are bounced with proper status and message", async () => {
     const res = await request(server).get("/api/class");
     expect(res.body.message).toMatch(/token required/i);
   });
-  test("[19] requests with an invalid token are bounced with proper status and message", async () => {
+  test("[18] requests with an invalid token are bounced with proper status and message", async () => {
     const res = await request(server)
       .get("/api/class")
       .set("Authorization", "foobar");
     expect(res.body.message).toMatch(/token invalid/i);
   });
-  test("[20] requests with a valid token obtain a list of classes", async () => {
+  test("[19] requests with a valid token obtain a list of classes", async () => {
     //register a user
     await request(server)
       .post("/api/auth/register")
@@ -277,57 +264,56 @@ describe("[GET] /api/class", () => {
   });
 });
 describe("[POST] /api/class", () => {
-  test("[21] users with role_name instructor can post a class", async () => {
-    //register a user as instructor
-    await request(server)
-      .post("/api/auth/register")
-      .send({ username: "bobby", password: "12345", role_name: "instructor" });
-
+  test("[20] users with role_name instructor can post a class", async () => {
     //login the user
-    await request(server)
+    let res = await request(server)
       .post("/api/auth/login")
-      .send({ username: "bobby", password: "12345" });
+      .send({ username: "admin", password: "1234" });
 
-    let result = await Class.add({
-      name: "the great hamstring pull",
-      type: "break your body type",
-      start_time: "right now",
-      duration: "lifelong",
-      intensity_level: "way hard",
-      location: "that one smelly gym",
-      max_class_size: 13,
-      instructor_id: 2,
-    });
-    expect(result).toMatchObject({
-      name: "the great hamstring pull",
-      class_id: 2,
-    });
-    result = await Class.findAll();
-    expect(result).toHaveLength(2);
+    //correct token gets list of classes
+    res = await request(server)
+      .post("/api/class")
+      .send({
+        duration: "lifelong",
+        intensity_level: "way hard",
+        location: "that one smelly gym",
+        max_class_size: 13,
+        name: "the great hamstring pull",
+        start_time: "right now",
+        type: "break your body type",
+        instructor_id: 2,
+      })
+      .set("Authorization", res.body.token);
+    expect(res.text).not.toBeNull();
   });
-  test("[22] users without role_name instructor cannot post a class", async () => {
+  test("[21] users without role_name instructor cannot post a class", async () => {
     //register a user as client
-    await request(server)
+    let res = await request(server)
       .post("/api/auth/register")
-      .send({ username: "bobby", password: "12345", role_name: "client" });
+      .send({ username: "henry", password: "123456" });
 
     //login the user
-    await request(server)
-      .post("/api/auth/login")
-      .send({ username: "bobby", password: "12345" });
+    res = await request(server).post("/api/auth/login").send({
+      username: "henry",
+      password: "123456",
+    });
 
-    let result = await Class.add({
-      name: "the great hamstring pull",
-      type: "break your body type",
-      start_time: "right now",
-      duration: "lifelong",
-      intensity_level: "way hard",
-      location: "that one smelly gym",
-      max_class_size: 13,
-      instructor_id: 2,
-    });
-    expect(result.body).toMatchObject({
-      message: "Authorized personnel only",
-    });
+    res = await request(server)
+      .post("/api/class")
+      .send({
+        duration: "lifelong",
+        intensity_level: "way hard",
+        location: "that one smelly gym",
+        max_class_size: 13,
+        name: "the great hamstring pull",
+        start_time: "right now",
+        type: "break your body type",
+      })
+      .set("Authorization", res.body.token);
+    expect(res.body.message).toMatch(/authorized personnel only/i);
   });
+});
+
+describe("[POST] /api/class", () => {
+  test("[22] users who are clients can rsvp to a class", async () => {});
 });
