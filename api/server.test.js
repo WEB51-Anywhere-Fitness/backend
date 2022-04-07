@@ -332,7 +332,7 @@ describe("[POST] /api/class", () => {
       max_class_size: 13,
       instructor_id: 2,
     });
-    expect(result).toMatchObject({
+    expect(result.body).toMatchObject({
       message: "Authorized personnel only",
     });
   });
