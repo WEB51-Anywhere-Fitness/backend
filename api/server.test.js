@@ -38,7 +38,6 @@ test("testing add function", async () => {
     location: "that one smelly gym",
     registered_attendees: 13,
     max_class_size: 13,
-    role_name: "instructor",
     instructor_id: 2,
   });
   expect(result).toMatchObject({
@@ -61,9 +60,7 @@ test("testing findById", async () => {
     location: "that one smelly gym",
     registered_attendees: 13,
     max_class_size: 13,
-    role_name: "instructor",
     instructor_id: 2,
-    role_id: 2,
   });
   // findById
   result = await Class.findById(2);
@@ -83,9 +80,7 @@ test("testing update", async () => {
     location: "that one smelly gym",
     registered_attendees: 13,
     max_class_size: 13,
-    role_name: "instructor",
     instructor_id: 2,
-    role_id: 2,
   });
   // update
   expect(result).toHaveProperty("name", "the great hamstring pull");
@@ -107,9 +102,7 @@ test("testing deleteById", async () => {
     location: "that one smelly gym",
     registered_attendees: 13,
     max_class_size: 13,
-    role_name: "instructor",
     instructor_id: 2,
-    role_id: 2,
   });
   // deleteById
   result = await Class.deleteById(42);

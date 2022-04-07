@@ -10,7 +10,6 @@ exports.seed = function (knex) {
       registered_attendees: 4,
       max_class_size: 22,
       instructor_id: 2,
-      role_id: 2,
     },
   ]);
 };
