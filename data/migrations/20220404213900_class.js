@@ -18,14 +18,6 @@ exports.up = function (knex) {
         .inTable("users")
         .onUpdate("CASCADE")
         .onDelete("CASCADE");
-      tbl
-        .integer("role_id")
-        .unsigned()
-        .notNullable()
-        .references("role_id")
-        .inTable("roles")
-        .onUpdate("CASCADE")
-        .onDelete("CASCADE");
     })
 
     .createTable("class_clients", (tbl) => {
