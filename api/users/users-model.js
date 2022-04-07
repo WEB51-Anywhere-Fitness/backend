@@ -1,9 +1,12 @@
+// database config import
 const db = require("../../data/db-config");
 
+// model function returns all users, joining role_name and role_id
 const findAll = () => {
   return db("users").join("roles as r", "u.role_id", "=", "r.role_id");
 };
 
+// model function to find by any given filter
 function findBy(filter) {
   return db("users as u")
     .join("roles as r", "u.role_id", "=", "r.role_id")
@@ -11,6 +14,7 @@ function findBy(filter) {
     .where(filter);
 }
 
+// another behemoth async add function that returns the new user
 async function add({ username, password, role_name }) {
   let created_user_id;
   await db.transaction(async (trx) => {
@@ -34,6 +38,7 @@ async function add({ username, password, role_name }) {
   return createdUser;
 }
 
+// function to find by id
 function findById(user_id) {
   return db("users as u")
     .join("roles as r", "u.role_id", "=", "r.role_id")
@@ -42,10 +47,13 @@ function findById(user_id) {
     .first();
 }
 
+// function to delete user, not really used yet seems like more of an admin thing but it cant hurt to keep it
 function deleteById(user_id) {
   db("users").where("user_id", user_id).del();
   return findById(user_id);
 }
+
+// model function exports
 module.exports = {
   add,
   findBy,
