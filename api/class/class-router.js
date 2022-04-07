@@ -1,36 +1,42 @@
 const router = require("express").Router();
 const Class = require("./class-model");
-const {
-    restricted,
-    only
-} = require('../auth/auth-middleware');
+const { restricted, only } = require("../auth/auth-middleware");
 
-router.get("/", restricted, (req, res, next)=>{
-    Class.findAll()
-    .then(classes => {
-        res.status(200).json(classes);
+router.get("/", restricted, (req, res, next) => {
+  Class.findAll()
+    .then((classes) => {
+      res.status(200).json(classes);
     })
     .catch(next);
 });
 
-router.get("/:class_id", restricted, (req,res,next)=>{
-    const {class_id} = req.params;
-    Class.findById(class_id)
-    .then(classes =>{
-        res.json(classes)
+router.get("/:class_id", restricted, (req, res, next) => {
+  const { class_id } = req.params;
+  Class.findById(class_id)
+    .then((classes) => {
+      res.json(classes);
     })
     .catch(next);
 });
 
-router.post("/", restricted, only('instructor'), (req, res, next)=>{
-    const body = req.body;
-    if( !body.name || !body.type || !body.start_time || !body.duration || !body.intensity_level || !body.location || !body.registered_attendees|| !body.max_class_size ){
-        res.status(400).json({message: "Please provide required credentials"})
-        return;
-    }
-    Class.add(body)
-    .then(classes =>{
-        res.status(201).json(classes)
+router.post("/", restricted, only("instructor"), (req, res, next) => {
+  const body = req.body;
+  if (
+    !body.name ||
+    !body.type ||
+    !body.start_time ||
+    !body.duration ||
+    !body.intensity_level ||
+    !body.location ||
+    !body.registered_attendees ||
+    !body.max_class_size
+  ) {
+    res.status(400).json({ message: "Please provide required credentials" });
+    return;
+  }
+  Class.add(body)
+    .then((classes) => {
+      res.status(201).json(classes);
     })
     .catch(next);
 });
@@ -65,14 +71,5 @@ router.use((err, req, res, next) => {
     stack: err.stack,
   });
 });
-
-router.use((err, req, res, next)=>{ //eslint-disable-line
-    
-    res.status(500).json({
-        message: err.message,
-        stack: err.stack
-    })
-})
-
 
 module.exports = router;

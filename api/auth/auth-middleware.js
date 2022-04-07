@@ -32,7 +32,7 @@ const checkUsernameExists = async (req, res, next) => {
     let user = await User.findBy({ username: req.body.username });
 
     if (!user) {
-      next({ status: 401, message: "Invalid credentials" });
+      next({ status: 401, message: "Invalid login credentials" });
     } else {
       next();
     }
@@ -52,19 +52,22 @@ async function checkUsernameFree(req, res, next) {
 
 const validateRoleName = (req, res, next) => {
   let user = req.body;
-  console.log(user.role_name);
   if (!user.role_name || user.role_name.trim() == "") {
     user.role_name = "client";
-  } else if (user.role_name !== "instructor" && user.role_name !== "client") {
+  }
+  if (
+    user.role_name.trim() !== "instructor" &&
+    user.role_name.trim() !== "client"
+  ) {
     res.status(422).json({
-      message: "Invalid role name"
+      message: "Invalid role name",
     });
   } else if (user.role_name.trim().length > 32) {
     res.status(422).json({
       message: "Role name can not be longer than 32 characters",
     });
   } else {
-    next()
+    next();
   }
 };
 
