@@ -3,13 +3,10 @@ const db = require("../../data/db-config");
 
 // db access function to find all classes
 const findAll = () => {
-  return db("classes as c").join(
-    "users as u",
-    "c.instructor_id",
-    "=",
-    "u.user_id"
-  ).select(
-    "c.class_id",
+  return db("classes as c")
+    .join("users as u", "c.instructor_id", "=", "u.user_id")
+    .select(
+      "c.class_id",
       "c.name",
       "c.type",
       "c.start_time",
@@ -19,7 +16,7 @@ const findAll = () => {
       "c.max_class_size",
       "u.user_id as instructor_id",
       "u.username as instructor"
-  );
+    );
 };
 
 // access function that inserts registration object containing user_id and class_id into class_clients join table
@@ -56,8 +53,8 @@ async function deleteById(class_id) {
 function findById(class_id) {
   return db("classes as c")
     .join("users as u", "c.instructor_id", "=", "u.user_id")
-    .join("class_clients", "c.class_id", "=", "class_clients.class_id")
-    .count("class_clients.user_id", {as: 'registered_attendees'})
+    .leftJoin("class_clients", "c.class_id", "=", "class_clients.class_id")
+    .count("class_clients.user_id", { as: "registered_attendees" })
     .select(
       "c.class_id",
       "c.name",
@@ -69,15 +66,15 @@ function findById(class_id) {
       "c.max_class_size"
     )
     .where("c.class_id", class_id)
-    .first()
+    .first();
 }
 
 // access function that returns a list of attendees to a class by name from the join table
 function getAttendeesById(class_id) {
-  return db('class_clients as cc')
-    .join('users as u', 'cc.user_id', '=', 'u.user_id')
+  return db("class_clients as cc")
+    .join("users as u", "cc.user_id", "=", "u.user_id")
     .select("u.username")
-    .where("cc.class_id", class_id)
+    .where("cc.class_id", class_id);
 }
 
 // behemoth asynchronous function that inserts a new class into the database
@@ -88,9 +85,8 @@ async function add({
   duration,
   intensity_level,
   location,
-  registered_attendees,
   max_class_size,
-  instructor_id
+  instructor_id,
 }) {
   let created_class_id;
   await db.transaction(async (trx) => {
@@ -101,9 +97,8 @@ async function add({
       duration,
       intensity_level,
       location,
-      registered_attendees,
       max_class_size,
-      instructor_id
+      instructor_id,
     });
     created_class_id = class_id;
   });
@@ -127,5 +122,5 @@ module.exports = {
   deleteById,
   update,
   getAttendeesById,
-  registerForClass
+  registerForClass,
 };

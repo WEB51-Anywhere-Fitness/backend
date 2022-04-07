@@ -43,7 +43,7 @@ router.post(
   (req, res, next) => {
     let user = req.body;
 
-    const hash = bcrypt.hashSync(user.password, 10);
+    const hash = bcrypt.hashSync(user.password, 8);
     user.password = hash;
 
     User.add(user)
