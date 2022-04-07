@@ -14,12 +14,15 @@ const findAll = () => {
       "c.duration",
       "c.intensity_level",
       "c.location",
-      "c.registered_attendees",
       "c.max_class_size",
       "u.user_id as instructor_id",
       "u.username as instructor"
   );
 };
+
+function registerForClass(registration) {
+  return db("class_clients").insert(registration);
+}
 
 function findBy(filter) {
   return db("classes as c")
@@ -32,7 +35,6 @@ function findBy(filter) {
       "c.duration",
       "c.intensity_level",
       "c.location",
-      "c.registered_attendees",
       "c.max_class_size",
       "u.user_id as user"
     )
@@ -48,6 +50,8 @@ async function deleteById(class_id) {
 function findById(class_id) {
   return db("classes as c")
     .join("users as u", "c.instructor_id", "=", "u.user_id")
+    .join("class_clients", "c.class_id", "=", "class_clients.class_id")
+    .count("class_clients.user_id", {as: 'registered_attendees'})
     .select(
       "c.class_id",
       "c.name",
@@ -56,11 +60,17 @@ function findById(class_id) {
       "c.duration",
       "c.intensity_level",
       "c.location",
-      "c.registered_attendees",
       "c.max_class_size"
     )
     .where("c.class_id", class_id)
-    .first();
+    .first()
+}
+
+function getAttendeesById(class_id) {
+  return db('class_clients as cc')
+    .join('users as u', 'cc.user_id', '=', 'u.user_id')
+    .select("u.username")
+    .where("cc.class_id", class_id)
 }
 
 async function add({
@@ -106,4 +116,6 @@ module.exports = {
   findAll,
   deleteById,
   update,
+  getAttendeesById,
+  registerForClass
 };

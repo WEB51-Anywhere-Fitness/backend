@@ -7,7 +7,6 @@ exports.seed = function (knex) {
       duration: "2 hours",
       intensity_level: "fun",
       location: "Providence, RI",
-      registered_attendees: 4,
       max_class_size: 22,
       instructor_id: 2,
     },
