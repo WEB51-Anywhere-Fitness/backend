@@ -37,7 +37,6 @@ describe("DB Access Functions", () => {
       duration: "lifelong",
       intensity_level: "way hard",
       location: "that one smelly gym",
-      registered_attendees: 13,
       max_class_size: 13,
       instructor_id: 2,
     });
@@ -59,7 +58,6 @@ describe("DB Access Functions", () => {
       duration: "lifelong",
       intensity_level: "way hard",
       location: "that one smelly gym",
-      registered_attendees: 13,
       max_class_size: 13,
       instructor_id: 2,
     });
@@ -79,7 +77,6 @@ describe("DB Access Functions", () => {
       duration: "lifelong",
       intensity_level: "way hard",
       location: "that one smelly gym",
-      registered_attendees: 13,
       max_class_size: 13,
       instructor_id: 2,
     });
@@ -101,13 +98,12 @@ describe("DB Access Functions", () => {
       duration: "lifelong",
       intensity_level: "way hard",
       location: "that one smelly gym",
-      registered_attendees: 13,
       max_class_size: 13,
       instructor_id: 2,
     });
     // deleteById
     result = await Class.deleteById(42);
-    expect(result).not.toBeDefined();
+    expect(result).toMatchObject({ name: null });
     result = await Class.findAll();
     expect(result).toHaveLength(2);
     result = await Class.deleteById(2);
@@ -299,7 +295,6 @@ describe("[POST] /api/class", () => {
       duration: "lifelong",
       intensity_level: "way hard",
       location: "that one smelly gym",
-      registered_attendees: 13,
       max_class_size: 13,
       instructor_id: 2,
     });
@@ -328,7 +323,6 @@ describe("[POST] /api/class", () => {
       duration: "lifelong",
       intensity_level: "way hard",
       location: "that one smelly gym",
-      registered_attendees: 13,
       max_class_size: 13,
       instructor_id: 2,
     });
