@@ -17,7 +17,7 @@ The Backend of this application contains authorization endpoints, three differen
 | POST   | :/api/auth/login                | username, password                                                           | N/A                              | Issues JWT to be placed in auth header.                       |
 | GET    | :/api/auth/                     | N/A                                                                          | N/A                              | Requires JWT with role of instructor,  returns list of users. |
 | GET    | :/api/auth/:user_id             | N/A                                                                          | N/A                              | Requires JWT with role of instructor,  returns user details.  |
-| ------ | ------------------------------- | ---------------------------------------------------------------------------- | -------------------------------- | ------------------------------------------------------------- |
+|        |                                 |                                                                              |                                  |                                                               |
 | GET    | :/api/class/                    | N/A                                                                          | N/A                              | Restricted, requires valid JWT Header                         |
 | GET    | :/api/class/:class_id           | N/A                                                                          | N/A                              | Restricted, requires valid JWT Header                         |
 | GET    | :/api/class/:class_id/attendees | N/A                                                                          | N/A                              | Requires JWT with role of instructor,  returns list of users. |
@@ -25,6 +25,7 @@ The Backend of this application contains authorization endpoints, three differen
 | POST   | :/api/class/                    | name, type, start_time, duration,  intensity_level, location, max_class_size | N/A                              | Requires JWT with role of instructor.                         |
 | DELETE | :/api/class/:class_id           | N/A                                                                          | N/A                              | Requires JWT with role of instructor.                         |
 | PUT    | :/api/class/:class_id           | N/A                                                                          | N/A                              | Requires JWT with role of instructor.                         |
+
 ### **MEET THE TEAM**
 
 **Will Phillips**
