@@ -280,3 +280,34 @@ describe("[GET] /api/class", () => {
     ]);
   });
 });
+describe("[POST] /api/class", () => {
+  test("[21] only users with role_name instructor can post a class", async () => {
+    //register a user as instructor
+    await request(server)
+      .post("/api/auth/register")
+      .send({ username: "bobby", password: "12345", role_name: "instructor" });
+
+    //login the user
+    await request(server)
+      .post("/api/auth/login")
+      .send({ username: "bobby", password: "12345" });
+
+    let result = await Class.add({
+      name: "the great hamstring pull",
+      type: "break your body type",
+      start_time: "right now",
+      duration: "lifelong",
+      intensity_level: "way hard",
+      location: "that one smelly gym",
+      registered_attendees: 13,
+      max_class_size: 13,
+      instructor_id: 2,
+    });
+    expect(result).toMatchObject({
+      name: "the great hamstring pull",
+      class_id: 2,
+    });
+    result = await Class.findAll();
+    expect(result).toHaveLength(2);
+  });
+});
