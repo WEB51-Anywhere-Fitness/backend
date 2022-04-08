@@ -314,6 +314,26 @@ describe("[POST] /api/class", () => {
   });
 });
 
-describe("[POST] /api/class", () => {
-  test("[22] users who are clients can rsvp to a class", async () => {});
+describe("[POST] /api/class/:class_id/rsvp", () => {
+  test("[22] users who are clients can rsvp to a class", async () => {
+    //register a user as client
+    let res = await request(server)
+      .post("/api/auth/register")
+      .send({ username: "henry", password: "123456" });
+
+    //login the user
+    res = await request(server).post("/api/auth/login").send({
+      username: "henry",
+      password: "123456",
+    });
+
+    res = await request(server)
+      .post("/api/class/8/rsvp")
+      .send()
+      .set("Authorization", res.body.token);
+
+    expect(res.body.message).toMatchObject({
+      message: "Class sign-up successful!",
+    });
+  });
 });
