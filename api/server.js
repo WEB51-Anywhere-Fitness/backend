@@ -15,6 +15,11 @@ server.use(express.json());
 server.use("/api/class", classRouter);
 server.use("/api/auth", usersRouter);
 
+server.get("/", (req, res, next) => {
+  res.json("Welcome to the Anywhere Fitness API");
+  next();
+});
+
 // global error handling middleware
 server.use((err, req, res, next) => {
   res.status(err.status || 500).json({
