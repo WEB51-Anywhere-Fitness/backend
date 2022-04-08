@@ -23,4 +23,8 @@ module.exports = {
     ...sharedConfig,
     connection: { filename: "./data/testing.db3" },
   },
+  production: {
+    ...sharedConfig,
+    connection: { filename: "./data/fitness.db3" },
+  },
 };
