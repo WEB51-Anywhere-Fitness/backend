@@ -46,5 +46,5 @@ The Backend of this application contains authorization endpoints, three differen
 
 **GitHub:** [https://github.com/FatimahSarwar](https://github.com/FatimahSarwar)
 
-#DEPLOYED HEROKU LINK:
-** https://anywhere-fitness-web51.herokuapp.com/ **
+# DEPLOYED HEROKU LINK:
+**https://anywhere-fitness-web51.herokuapp.com/ **
